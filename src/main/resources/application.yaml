@@ -50,3 +50,7 @@ logging:
     com.music.store: debug
     org.springframework.security: info
     org.springframework.web: info
+
+jwt:
+  secret: 9f8b7c6e-2a1d-4e5f-8c3b-7a6d5e4f2b1c # JWT密钥（请修改为复杂且唯一的值）
+  expiration: 86400 # JWT过期时间（秒），这里设置为1天

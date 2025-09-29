@@ -27,20 +27,24 @@ CREATE TABLE IF NOT EXISTS sys_user (
     nickname VARCHAR(50) DEFAULT '' COMMENT '用户昵称',
     phone VARCHAR(20) DEFAULT '' COMMENT '手机号',
     email VARCHAR(100) DEFAULT '' COMMENT '邮箱',
+    role_id INT COMMENT '角色ID（关联sys_role.id）',
     status TINYINT DEFAULT 1 COMMENT '状态（0：禁用，1：正常）',
     is_deleted TINYINT DEFAULT 0 COMMENT '逻辑删除（0：未删，1：已删）',
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     UNIQUE KEY uk_username (username) COMMENT '用户名唯一',
-    INDEX idx_status (status) COMMENT '状态索引'
+    INDEX idx_status (status) COMMENT '状态索引',
+    INDEX idx_role_id (role_id) COMMENT '角色ID索引'
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '系统用户表';
 
--- 插入默认管理员（密码：123456，加密后的值）
-INSERT INTO sys_user (username, password, nickname, status)
-VALUES ('admin', '$2a$10$7T4Y6Z7X8W9V0U1S2D3F4G5H6J7K8L9M0N1O2P3Q4R5S6T7U8V9W0', '系统管理员', 1)
-    ON DUPLICATE KEY UPDATE password = VALUES(password);
+-- 插入默认管理员（密码：123，加密后的值），并关联ADMIN角色
+INSERT INTO sys_user (username, password, nickname, status, role_id)
+SELECT 'admin', '$2a$10$7T4Y6Z7X8W9V0U1S2D3F4G5H6J7K8L9M0N1O2P3Q4R5S6T7U8V9W0', '系统管理员', 1, r.id
+FROM sys_role r WHERE r.role_name = 'ROLE_ADMIN'
+    ON DUPLICATE KEY UPDATE password = VALUES(password), role_id = VALUES(role_id);
 
--- 4. 用户-角色中间表（sys_user_role）
+-- 4. 用户-角色中间表（sys_user_role） - 已废弃
+/*
 CREATE TABLE IF NOT EXISTS sys_user_role (
                                              id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '中间表ID',
                                              user_id BIGINT NOT NULL COMMENT '用户ID（关联sys_user.id）',
@@ -55,6 +59,7 @@ CREATE TABLE IF NOT EXISTS sys_user_role (
 INSERT INTO sys_user_role (user_id, role_id)
 SELECT (SELECT id FROM sys_user WHERE username = 'admin'), (SELECT id FROM sys_role WHERE role_name = 'ROLE_ADMIN')
     ON DUPLICATE KEY UPDATE user_id = VALUES(user_id);
+*/
 
 -- 5. 音乐分类表（music_category）
 CREATE TABLE IF NOT EXISTS music_category (
