@@ -1,0 +1,52 @@
+server:
+  port: 8080 # 项目端口
+
+
+spring:
+  # 1. MySQL数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.111.132:3306/music_store_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: 123
+
+  # 2. Redis缓存配置
+  data:
+    redis:
+      host: 192.168.111.132 # Redis地址（本地默认）
+      port: 6379 # Redis端口（默认）
+      password:
+      timeout: 3000ms # 连接超时时间
+      lettuce:
+        pool:
+          max-active: 8 # 最大连接数
+          max-idle: 8 # 最大空闲连接数
+          min-idle: 2 # 最小空闲连接数
+          max-wait: -1ms # 连接等待时间（-1表示无限制）
+
+  # 3. SpringSecurity配置（基础登录参数）
+  security:
+    user:
+      name: admin # 临时管理员账号（后续替换为数据库认证）
+      password: 123456 # 临时密码
+
+# 4. MyBatis-Plus配置
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml # Mapper.xml文件路径
+  type-aliases-package: com.music.store.studioproject.entity # 实体类包路径（简化XML中类名）
+  configuration:
+    map-underscore-to-camel-case: true # 开启下划线转驼峰（如music_id → musicId）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印SQL日志（开发环境用）
+  global-config:
+    db-config:
+      id-type: auto # 主键自增策略（MySQL用auto，雪花算法用id_worker）
+      logic-delete-field: isDeleted # 逻辑删除字段名（全局统一）
+      logic-delete-value: 1 # 已删除标记
+      logic-not-delete-value: 0 # 未删除标记
+
+# 5. 日志配置（开发环境 debug 级别，生产环境可改为 info）
+logging:
+  level:
+    com.music.store: debug
+    org.springframework.security: info
+    org.springframework.web: info
