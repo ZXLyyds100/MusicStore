@@ -48,6 +48,7 @@ mybatis-plus:
 logging:
   level:
     com.music.store: debug
+    org.springframework: debug
     org.springframework.security: info
     org.springframework.web: info
 

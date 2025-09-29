@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
+        <version>3.2.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.music.store</groupId>
@@ -47,7 +47,13 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.7</version>
+            <version>3.5.3.1</version>
+        </dependency>
+        <!-- 手动指定兼容Spring Boot 3.2.x的mybatis-spring版本 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>3.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -59,18 +65,16 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- spring-boot-starter-data-redis already includes this dependency -->
+        <!--
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.83</version>
         </dependency>
 
         <!-- JJWT 0.12.x 模块化依赖：api + impl(运行时) + jackson(运行时) -->
