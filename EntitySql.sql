@@ -148,20 +148,3 @@ CREATE TABLE IF NOT EXISTS order_item (
     INDEX idx_music_id (music_id) COMMENT '音乐ID索引'
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '订单子表（订单中的音乐明细）';
 
--- 11. 网站配置表（website_config）
-CREATE TABLE IF NOT EXISTS website_config (
-                                              id INT AUTO_INCREMENT PRIMARY KEY COMMENT '配置ID',
-                                              config_key VARCHAR(50) NOT NULL COMMENT '配置键（如website_name、service_phone）',
-    config_value VARCHAR(255) NOT NULL COMMENT '配置值',
-    config_desc VARCHAR(200) DEFAULT '' COMMENT '配置描述',
-    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    UNIQUE KEY uk_config_key (config_key) COMMENT '配置键唯一'
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '网站配置表';
-
--- 插入默认网站配置
-INSERT INTO website_config (config_key, config_value, config_desc) VALUES
-                                                                       ('website_name', '传智在线音乐商店', '网站名称'),
-                                                                       ('service_phone', '400-123-4567', '客服电话'),
-                                                                       ('zip_code', '510642', '邮编'),
-                                                                       ('website_desc', '提供高品质音乐购买与下载服务', '网站描述')
-    ON DUPLICATE KEY UPDATE config_value = VALUES(config_value);

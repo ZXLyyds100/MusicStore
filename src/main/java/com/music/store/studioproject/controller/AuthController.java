@@ -2,7 +2,8 @@ package com.music.store.studioproject.controller;
 
 import com.music.store.studioproject.dto.LoginDto;
 import com.music.store.studioproject.dto.LoginResponse;
-import com.music.store.studioproject.entity.SysUser;
+import com.music.store.studioproject.entity.User;
+import com.music.store.studioproject.service.UserService;
 import com.music.store.studioproject.service.impl.UserDetailsServiceImpl;
 import com.music.store.studioproject.utils.JwtUtil;
 import com.music.store.studioproject.utils.RedisUtils;
@@ -28,12 +29,13 @@ public class AuthController {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
     private final RedisUtils redisUtils;
-
-    public AuthController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, RedisUtils redisUtils) {
+    private final UserService userService;
+    public AuthController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, RedisUtils redisUtils, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.redisUtils = redisUtils;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -44,7 +46,7 @@ public class AuthController {
 
         // 2. 获取认证成功后的UserDetails
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        SysUser user = ((SysUser) userDetailsService.loadUserByUsername(userDetails.getUsername()));
+        User user = ((User) userDetailsService.loadUserByUsername(userDetails.getUsername()));
 
 
         // 3. 获取用户角色
@@ -85,6 +87,21 @@ public class AuthController {
         } catch (Exception e) {
             return Response.fail(401, "Refresh Token无效或已过期");
         }
+    }
+    @PostMapping("/register")
+    public Response<LoginResponse> register(@RequestBody LoginDto loginDto) {
+        User newUser = new User();
+        newUser.setUsername(loginDto.getUsername());
+        newUser.setPassword(loginDto.getPassword());
+        newUser.setRoleId(2); // 默认分配普通用户角色
+
+        // 这里可以添加更多的用户信息设置，比如邮箱、手机号等
+
+        // 保存用户到数据库
+        userService.saveUser(newUser);
+
+        // 注册成功后，直接登录并返回Token
+        return login(loginDto);
     }
 }
 

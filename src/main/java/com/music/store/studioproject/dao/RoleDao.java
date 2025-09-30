@@ -1,10 +1,10 @@
 package com.music.store.studioproject.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.music.store.studioproject.entity.SysRole;
+import com.music.store.studioproject.entity.Role;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface SysRoleDao extends BaseMapper<SysRole> {
+public interface RoleDao extends BaseMapper<Role> {
 
 }
