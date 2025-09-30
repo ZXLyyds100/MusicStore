@@ -181,6 +181,14 @@ public class BusinessException extends RuntimeException {
 
     // ------------------- 5. 重写方法 -------------------
 
+    /**
+     * 直接获取错误码的long值
+     * @return 错误码
+     */
+    public long getCode() {
+        return this.errorCode.getCode();
+    }
+
     @Override
     public String getMessage() {
         String baseMessage = String.format("Error Code: %d, Error Info: %s",

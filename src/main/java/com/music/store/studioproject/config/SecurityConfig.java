@@ -1,5 +1,6 @@
 package com.music.store.studioproject.config;
 
+import com.music.store.studioproject.exception.CustomAuthenticationEntryPoint;
 import com.music.store.studioproject.filter.JwtAuthenticationFilter;
 import com.music.store.studioproject.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -25,10 +26,12 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     @Bean
@@ -61,16 +64,20 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 // 2. 设置Session管理策略为无状态（STATELESS）
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // 3. 配置匿名用户处理
+                // 3. 配置异常处理
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(customAuthenticationEntryPoint) // 设置自定义认证入口点
+                )
+                // 4. 配置匿名用户处理
                 .anonymous(anonymous -> anonymous.authorities("ROLE_GUEST"))
-                // 4. 配置请求授权
+                // 5. 配置请求授权
                 .authorizeHttpRequests(auth -> auth
                         // 放行登录、刷新Token等公共路径
                         .requestMatchers("/auth/login", "/auth/refresh", "auth/register").permitAll()
                         // 其他所有请求都需要认证
                         .anyRequest().authenticated()
                 )
-                // 5. 将JWT认证过滤器添加到UsernamePasswordAuthenticationFilter之前
+                // 6. 将JWT认证过滤器添加到UsernamePasswordAuthenticationFilter之前
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
