@@ -9,18 +9,16 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("sys_role")
-public class Role {
+@TableName("music_collection")
+public class MusicCollection {
 
 
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
-    private String roleName;
+    private Long userId;
 
-    private String roleDesc;
+    private Long musicId;
 
     private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 }

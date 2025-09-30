@@ -6,19 +6,31 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("sys_role")
-public class Role {
+@TableName("order_main")
+public class OrderInformation {
+
 
 
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
-    private String roleName;
+    private String orderNo;
 
-    private String roleDesc;
+    private Long userId;
+
+    private BigDecimal totalAmount;
+
+    private Integer orderStatus;
+
+    private LocalDateTime payTime;
+
+    private LocalDateTime cancelTime;
+
+    private LocalDateTime finishTime;
 
     private LocalDateTime createTime;
 

@@ -7,26 +7,18 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("sys_user")
-public class User {
+@TableName("shopping_cart")
+public class ShoppingCart {
 
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private String username;
+    private Long userId;
 
-    private String password;
+    private Long musicId;
 
-    private String nickname;
-
-    private String phone;
-
-    private String email;
-
-    private Integer roleId;
-
-    private Integer status;
+    private Integer count;
 
     @TableLogic
     private Integer isDeleted;

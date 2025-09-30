@@ -1,6 +1,7 @@
 package com.music.store.studioproject.filter;
 
 import com.music.store.studioproject.utils.JwtUtil;
+import com.music.store.studioproject.utils.UserContext;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,24 +32,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = extractTokenFromRequest(request);
 
-        if (StringUtils.hasText(token)) {
-            try {
-                Claims claims = jwtUtil.parseToken(token);
-                String username = jwtUtil.getUsername(claims);
-                String role = jwtUtil.getRole(claims);
+        try {
+            if (StringUtils.hasText(token)) {
+                try {
+                    Claims claims = jwtUtil.parseToken(token);
+                    Long userId = jwtUtil.getUserId(claims);
+                    String username = jwtUtil.getUsername(claims);
+                    String role = jwtUtil.getRole(claims);
 
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            username, null, Collections.singletonList(new SimpleGrantedAuthority(role)));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    // 将用户信息存入ThreadLocal
+                    UserContext.setUserId(userId);
+                    UserContext.setUsername(username);
+                    UserContext.setRole(role);
+
+                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                username, null, Collections.singletonList(new SimpleGrantedAuthority(role)));
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                } catch (Exception e) {
+                    // Token无效（过期、签名错误等），清除上下文
+                    SecurityContextHolder.clearContext();
                 }
-            } catch (Exception e) {
-                // Token无效（过期、签名错误等），清除上下文
-                SecurityContextHolder.clearContext();
             }
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } finally {
+            // 请求处理完毕后，清理ThreadLocal，防止内存泄漏
+            UserContext.clear();
+        }
     }
 
     private String extractTokenFromRequest(HttpServletRequest request) {
@@ -59,4 +71,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 }
-

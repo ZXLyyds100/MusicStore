@@ -4,29 +4,34 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("sys_user")
-public class User {
+@TableName("music_info")
+public class MusicInformation {
 
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private String username;
+    private String musicName;
 
-    private String password;
+    private String singer;
 
-    private String nickname;
+    private Integer categoryId;
 
-    private String phone;
+    private String albumName;
 
-    private String email;
+    private Integer duration;
 
-    private Integer roleId;
+    private Integer playCount;
 
-    private Integer status;
+    private BigDecimal price;
+
+    private String coverUrl;
+
+    private String musicUrl;
 
     @TableLogic
     private Integer isDeleted;

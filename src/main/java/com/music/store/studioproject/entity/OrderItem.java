@@ -6,21 +6,27 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("sys_role")
-public class Role {
-
+@TableName("order_item")
+public class OrderItem {
 
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
-    private String roleName;
+    private Long orderId;
 
-    private String roleDesc;
+    private Long musicId;
+
+    private String musicName;
+
+    private String singer;
+
+    private BigDecimal price;
+
+    private Integer count;
 
     private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 }

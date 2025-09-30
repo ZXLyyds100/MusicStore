@@ -5,22 +5,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("sys_role")
-public class Role {
-
-
-    @TableId(value = "id", type = IdType.AUTO)
+@TableName("website_config")
+public class WebsiteConfigEntity {
+    @TableId(type = IdType.AUTO, value = "id")
     private Integer id;
-
-    private String roleName;
-
-    private String roleDesc;
-
-    private LocalDateTime createTime;
-
+    private String configKey;
+    private String ConfigValue;
+    private String configDesc;
     private LocalDateTime updateTime;
 }
