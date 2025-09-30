@@ -391,7 +391,31 @@
 - **权限**: `USER`
 - **路径参数**:
   - `orderNo` (string, required): 订单号。
-- **成功响应 (200)**: 返回订单的详细信息，包括商品列表。
+- **成功响应 (200)**:
+  ```json
+  {
+    "code": 200,
+    "msg": "操作成功",
+    "data": {
+      "orderNo": "2025093012345678",
+      "userId": 2,
+      "totalAmount": 2.00,
+      "status": "PAID",
+      "createTime": "2025-09-30T10:00:00",
+      "payTime": "2025-09-30T10:01:00",
+      "shippingAddress": "某某省某某市某某区某某街道123号",
+      "items": [
+        {
+          "musicId": 101,
+          "musicName": "晴天",
+          "singer": "周杰伦",
+          "price": 1.00,
+          "count": 2
+        }
+      ]
+    }
+  }
+  ```
 
 ---
 
