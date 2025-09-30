@@ -2,7 +2,9 @@ package com.music.store.studioproject.controller;
 
 import com.music.store.studioproject.dto.LoginDto;
 import com.music.store.studioproject.dto.LoginResponse;
+import com.music.store.studioproject.dto.RefreshTokenDto;
 import com.music.store.studioproject.entity.User;
+import com.music.store.studioproject.exception.BusinessException;
 import com.music.store.studioproject.service.UserService;
 import com.music.store.studioproject.service.impl.UserDetailsServiceImpl;
 import com.music.store.studioproject.utils.JwtUtil;
@@ -46,7 +48,8 @@ public class AuthController {
 
         // 2. 获取认证成功后的UserDetails
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = ((User) userDetailsService.loadUserByUsername(userDetails.getUsername()));
+        // 使用 UserDetailsServiceImpl 的新方法加载自定义的 User 实体
+        User user = userDetailsService.loadUserEntityByUsername(userDetails.getUsername());
 
 
         // 3. 获取用户角色
@@ -66,25 +69,38 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public Response<String> refreshToken(@RequestBody String refreshToken) {
+    public Response<LoginResponse> refreshToken(@RequestBody RefreshTokenDto refreshTokenDto) {
+        String oldRefreshToken = refreshTokenDto.getRefreshToken();
         try {
-            // 1. 解析RefreshToken
-            Claims claims = jwtUtil.parseToken(refreshToken);
+            // 1. 解析并验证旧的RefreshToken
+            Claims claims = jwtUtil.parseToken(oldRefreshToken);
             String jti = claims.get("jti", String.class);
 
-            // 2. 验证Redis中的RefreshToken
-            if (!redisUtils.isRefreshTokenValid(jti, refreshToken)) {
+            // 2. 验证Redis中的RefreshToken是否存在且匹配
+            if (!redisUtils.isRefreshTokenValid(jti, oldRefreshToken)) {
                 return Response.fail(401, "Refresh Token无效或已过期");
             }
 
-            // 3. 重新生成AccessToken
+            // 3. 从Redis中删除旧的RefreshToken，实现“一次性”使用
+            redisUtils.deleteRefreshToken(jti);
+
+            // 4. 从旧Token中提取用户信息，用于生成新Token
             Long userId = jwtUtil.getUserId(claims);
             String username = jwtUtil.getUsername(claims);
             String role = jwtUtil.getRole(claims);
-            String newAccessToken = jwtUtil.generateAccessToken(userId, username, role);
 
-            return Response.success(newAccessToken);
+            // 5. 生成新的AccessToken和RefreshToken
+            String newAccessToken = jwtUtil.generateAccessToken(userId, username, role);
+            String newRefreshToken = jwtUtil.generateRefreshToken(userId, username, role);
+
+            // 6. 将新的RefreshToken存入Redis
+            Claims newClaims = jwtUtil.parseToken(newRefreshToken);
+            redisUtils.setRefreshToken(newClaims.get("jti", String.class), newRefreshToken);
+
+            // 7. 返回新的Token对
+            return Response.success(new LoginResponse(newAccessToken, newRefreshToken));
         } catch (Exception e) {
+            // 统一处理Token解析、验证过程中的所有异常
             return Response.fail(401, "Refresh Token无效或已过期");
         }
     }
@@ -96,12 +112,15 @@ public class AuthController {
         newUser.setRoleId(2); // 默认分配普通用户角色
 
         // 这里可以添加更多的用户信息设置，比如邮箱、手机号等
-
-        // 保存用户到数据库
-        userService.saveUser(newUser);
-
+        try {
+            // 保存用户到数据库
+            userService.saveUser(newUser);
+        } catch (BusinessException e) {
+            return Response.fail(400, e.getMessage());
+        } catch (Exception e) {
+            return Response.fail(500, "注册失败，请稍后重试");
+        }
         // 注册成功后，直接登录并返回Token
         return login(loginDto);
     }
 }
-

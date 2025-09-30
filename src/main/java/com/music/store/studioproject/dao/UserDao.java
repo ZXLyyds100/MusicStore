@@ -11,5 +11,6 @@ public interface UserDao extends BaseMapper<User> {
 
     @Select("SELECT * FROM sys_user WHERE username = #{username} AND is_deleted = 0")
     User findByUsername(@Param("username") String username);
+
 }
 

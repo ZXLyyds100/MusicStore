@@ -47,4 +47,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 4. 返回Spring Security的User对象
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
+
+    /**
+     * 根据用户名加载自定义的User实体
+     * @param username 用户名
+     * @return User实体
+     */
+    public User loadUserEntityByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
 }

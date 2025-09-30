@@ -66,7 +66,7 @@ public class SecurityConfig {
                 // 4. 配置请求授权
                 .authorizeHttpRequests(auth -> auth
                         // 放行登录、刷新Token等公共路径
-                        .requestMatchers("/auth/login", "/auth/refresh").permitAll()
+                        .requestMatchers("/auth/login", "/auth/refresh", "auth/register").permitAll()
                         // 其他所有请求都需要认证
                         .anyRequest().authenticated()
                 )
