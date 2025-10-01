@@ -22,4 +22,7 @@ public interface UserService {
     Response removeCollection(Integer musicId);
 
     Response<List<CartItemDto>> getCart();
+
+    Response addCartItem(Long musicId, Integer quantity);
+
 }

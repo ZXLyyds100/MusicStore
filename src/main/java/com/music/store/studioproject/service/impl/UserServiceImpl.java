@@ -194,4 +194,32 @@ public class UserServiceImpl implements UserService {
             return Response.success(cartItemDtos, "获取购物车成功");
         }
     }
+
+    @Override
+    public Response addCartItem(Long musicId, Integer quantity) {
+        Long userId = UserContext.getUserId();
+        LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ShoppingCart::getUserId, userId).eq(ShoppingCart::getMusicId, musicId);
+        ShoppingCart existingItem = shoppingCartDao.selectOne(queryWrapper);
+        if (existingItem != null) {
+            existingItem.setCount(existingItem.getCount() + quantity);
+            int rows = shoppingCartDao.updateById(existingItem);
+            if (rows > 0) {
+                return Response.success("购物车更新成功");
+            } else {
+                return Response.fail("购物车更新失败");
+            }
+        } else {
+            ShoppingCart newItem = new ShoppingCart();
+            newItem.setUserId(userId);
+            newItem.setMusicId(musicId);
+            newItem.setCount(quantity);
+            int rows = shoppingCartDao.insert(newItem);
+            if (rows > 0) {
+                return Response.success("添加到购物车成功");
+            } else {
+                return Response.fail("添加到购物车失败");
+            }
+        }
+    }
 }
