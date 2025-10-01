@@ -96,4 +96,16 @@ public class UserController {
     public Response addCartItem(@RequestBody CartItemDto cartItemDto) {
         return userService.addCartItem(cartItemDto.getMusicId(), cartItemDto.getQuantity());
     }
+    /**
+     * 更新用户购物车中的音乐数量
+     * @Param cartItemDto,cartItemId
+     * @Return Response
+     * @Author 郑鑫亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PutMapping("/cart/items/{cartItemId}")
+    public Response updateCartItem(@RequestBody CartItemDto cartItemDto,@PathVariable Integer cartItemId) {
+        return userService.updateCartItem(cartItemId, cartItemDto.getQuantity());
+    }
 }

@@ -25,4 +25,6 @@ public interface UserService {
 
     Response addCartItem(Long musicId, Integer quantity);
 
+    Response updateCartItem(Integer cartItemId, Integer quantity);
+
 }

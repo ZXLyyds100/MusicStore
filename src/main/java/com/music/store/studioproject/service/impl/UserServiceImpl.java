@@ -222,4 +222,20 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
+
+    @Override
+    public Response updateCartItem(Integer cartItemId, Integer quantity) {
+        Long userId = UserContext.getUserId();
+        ShoppingCart cartItem = shoppingCartDao.selectById(cartItemId);
+        if (cartItem == null || !cartItem.getUserId().equals(userId)) {
+            return Response.fail("购物车项不存在");
+        }
+        cartItem.setCount(quantity);
+        int rows = shoppingCartDao.updateById(cartItem);
+        if (rows > 0) {
+            return Response.success("购物车项更新成功");
+        } else {
+            return Response.fail("购物车项更新失败");
+        }
+    }
 }
