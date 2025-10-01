@@ -1,10 +1,12 @@
 package com.music.store.studioproject.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.music.store.studioproject.dao.MusicInformationDao;
 import com.music.store.studioproject.dao.OrderInformationDao;
 import com.music.store.studioproject.dao.OrderItemDao;
 import com.music.store.studioproject.dao.ShoppingCartDao;
+import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.dto.TakeOrderDto;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.entity.OrderInformation;
@@ -74,5 +76,21 @@ public class OrderServiceImpl implements OrderService {
             orderItemDao.insert(orderItem);
         }
         return Response.success(new TakeOrderDto(orderNumber));
+    }
+
+    @Override
+    public Response<GetOrdersDto> getOrders(int page, int size) {
+        Page<OrderInformation> orderPage = new Page<>(page, size);
+        LambdaQueryWrapper<OrderInformation> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderInformation::getUserId, UserContext.getUserId());
+        orderInformationDao.selectPage(orderPage, queryWrapper);
+        List<OrderInformation> records = orderPage.getRecords();
+        GetOrdersDto getOrdersDto = new GetOrdersDto();
+        Integer total = (int) orderPage.getTotal();
+        getOrdersDto.setPage(page);
+        getOrdersDto.setTotal(total);
+        getOrdersDto.setRecords(records);
+        return Response.success(getOrdersDto, "获取订单列表成功");
+
     }
 }

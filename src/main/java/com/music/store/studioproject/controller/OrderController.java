@@ -1,14 +1,14 @@
 package com.music.store.studioproject.controller;
 
 import com.music.store.studioproject.dto.DeleteCartDto;
+import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.dto.TakeOrderDto;
 import com.music.store.studioproject.service.OrderService;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -27,5 +27,16 @@ public class OrderController {
     public Response<TakeOrderDto> takeOrder(@RequestBody DeleteCartDto cartDto) {
         return orderService.takeOrder(cartDto.getCartItemIds());
     }
-
+    /**
+     * 获取用户订单列表
+     * @Param page,size
+     * @Return Response<GetOrdersDto>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @GetMapping("/{page}/{size}")
+    public Response<GetOrdersDto> getOrders(@PathVariable int page, @PathVariable int size) {
+        return orderService.getOrders(page, size);
+    }
 }

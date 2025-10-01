@@ -3,6 +3,7 @@ package com.music.store.studioproject.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @TableName("order_main")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderInformation {
 
 
