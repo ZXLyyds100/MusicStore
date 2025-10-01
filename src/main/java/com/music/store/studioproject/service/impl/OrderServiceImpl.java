@@ -7,6 +7,7 @@ import com.music.store.studioproject.dao.OrderInformationDao;
 import com.music.store.studioproject.dao.OrderItemDao;
 import com.music.store.studioproject.dao.ShoppingCartDao;
 import com.music.store.studioproject.dto.GetOrdersDto;
+import com.music.store.studioproject.dto.OrderDetailDto;
 import com.music.store.studioproject.dto.TakeOrderDto;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.entity.OrderInformation;
@@ -92,5 +93,29 @@ public class OrderServiceImpl implements OrderService {
         getOrdersDto.setRecords(records);
         return Response.success(getOrdersDto, "获取订单列表成功");
 
+    }
+
+    @Override
+    public Response<OrderDetailDto> getOrderDetail(String orderNo) {
+        LambdaQueryWrapper<OrderInformation> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderInformation::getOrderNo, orderNo);
+        OrderInformation orderInformation = orderInformationDao.selectOne(queryWrapper);
+        if (orderInformation == null) {
+            return Response.fail("订单不存在");
+        }
+        if (!orderInformation.getUserId().equals(UserContext.getUserId())) {
+            return Response.fail("无权查看该订单");
+        }
+        LambdaQueryWrapper<OrderItem> itemQueryWrapper = new LambdaQueryWrapper<>();
+        itemQueryWrapper.eq(OrderItem::getOrderId, orderInformation.getId());
+        List<OrderItem> orderItems = orderItemDao.selectList(itemQueryWrapper);
+        OrderDetailDto orderDetailDto = new OrderDetailDto();
+        orderDetailDto.setItems(orderItems);
+        orderDetailDto.setStatus(orderInformation.getOrderStatus());
+        orderDetailDto.setCreateTime(orderDetailDto.getCreateTime());
+        orderDetailDto.setPayTime(orderDetailDto.getPayTime());
+        orderDetailDto.setTotalAmount(orderDetailDto.getTotalAmount());
+        orderDetailDto.setUserId(orderInformation.getUserId());
+        return Response.success(orderDetailDto, "获取订单详情成功");
     }
 }

@@ -1,6 +1,7 @@
 package com.music.store.studioproject.service;
 
 import com.music.store.studioproject.dto.GetOrdersDto;
+import com.music.store.studioproject.dto.OrderDetailDto;
 import com.music.store.studioproject.dto.TakeOrderDto;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.stereotype.Service;
@@ -13,4 +14,5 @@ public interface OrderService {
 
     Response<GetOrdersDto> getOrders(int page, int size);
 
+    Response<OrderDetailDto> getOrderDetail(String orderNo);
 }
