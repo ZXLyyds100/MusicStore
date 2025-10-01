@@ -2,11 +2,14 @@ package com.music.store.studioproject.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.music.store.studioproject.dao.MusicCategoryDao;
 import com.music.store.studioproject.dao.MusicInformationDao;
 import com.music.store.studioproject.dto.MusicPageDto;
 import com.music.store.studioproject.dto.MusicRecordDto;
+import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.service.GuestService;
+import com.music.store.studioproject.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 public class GuestServiceImpl implements GuestService {
     @Autowired
     private MusicInformationDao musicInformationDao;
+    @Autowired
+    private MusicCategoryDao musicCategoryDao;
     @Override
     public MusicPageDto searchMusic(String keyword, Integer categoryId, int page, int size) {
         // 1. 创建MyBatis-Plus的分页对象
@@ -60,5 +65,15 @@ public class GuestServiceImpl implements GuestService {
         musicPageDto.setRecords(records);
 
         return musicPageDto;
+    }
+
+    @Override
+    public MusicInformation getMusicById(Long id) {
+        return musicInformationDao.selectById(id);
+    }
+
+    @Override
+    public Response<List<MusicCategory>> getCategories() {
+        return Response.success(musicCategoryDao.selectList(null));
     }
 }
