@@ -32,6 +32,7 @@ public class UserController {
         }
         return userService.changePassword(changePasswordDto);
     }
+
     /**
      * 获取用户收藏的音乐列表
      * @Param page,size
