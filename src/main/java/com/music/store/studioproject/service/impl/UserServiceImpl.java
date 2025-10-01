@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MusicInformationDao musicInformationDao;
 
+
     @Override
     public void saveUser(User newUser) {
         User user = userDao.findByUsername(newUser.getUsername());
@@ -120,4 +121,25 @@ public class UserServiceImpl implements UserService {
 
             return Response.success(musicCollectionDto, "获取收藏列表成功");
         }
+
+    @Override
+    public Response addCollection(Integer musicId) {
+        Long userId = UserContext.getUserId();
+        QueryWrapper<MusicCollection> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId).eq("music_id", musicId);
+        MusicCollection existingCollection = musicCollectionDao.selectOne(queryWrapper);
+        if (existingCollection != null) {
+            return Response.fail("音乐已收藏");
+        } else {
+            MusicCollection musicCollection = new MusicCollection();
+            musicCollection.setUserId(userId);
+            musicCollection.setMusicId(musicId.longValue());
+            int rows = musicCollectionDao.insert(musicCollection);
+            if (rows > 0) {
+                return Response.success("收藏成功");
+            } else {
+                return Response.fail("收藏失败");
+            }
+        }
+    }
 }

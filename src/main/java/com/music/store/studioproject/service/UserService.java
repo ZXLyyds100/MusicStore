@@ -13,4 +13,6 @@ public interface UserService {
     Response changePassword(ChangePasswordDto changePasswordDto);
 
     Response<MusicCollectionDto> getCollections(int start, int size, int page);
+
+    Response addCollection(Integer musicId);
 }

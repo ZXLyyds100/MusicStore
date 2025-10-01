@@ -1,5 +1,6 @@
 package com.music.store.studioproject.controller;
 
+import com.music.store.studioproject.dto.AddCollectionDto;
 import com.music.store.studioproject.dto.ChangePasswordDto;
 import com.music.store.studioproject.dto.MusicCollectionDto;
 import com.music.store.studioproject.service.UserService;
@@ -31,10 +32,29 @@ public class UserController {
         }
         return userService.changePassword(changePasswordDto);
     }
-
+    /**
+     * 获取用户收藏的音乐列表
+     * @Param page,size
+     * @Return Response<MusicCollectionDto>
+     * @Author 郑鑫亮
+     * @Date 2025/10/1
+     *
+     * */
     @GetMapping("/collections/{page}/{size}")
     public Response<MusicCollectionDto> collections(@PathVariable int page, @PathVariable int size) {
         int start = (page - 1) * size;
         return userService.getCollections(start, size, page);
+    }
+    /**
+     * 添加音乐到用户收藏
+     * @Param addCollectionDto
+     * @Return Response
+     * @Author 郑鑫亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PostMapping("/collections")
+    public Response addCollection(@RequestBody AddCollectionDto addCollectionDto) {
+        return userService.addCollection(addCollectionDto.getMusicId());
     }
 }

@@ -20,6 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserDao userDao;
     private final RoleDao roleDao;
 
+
     public UserDetailsServiceImpl(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
         this.roleDao = roleDao;
