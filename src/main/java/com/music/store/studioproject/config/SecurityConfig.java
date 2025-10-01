@@ -60,24 +60,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. 禁用CSRF（因为我们使用JWT，不需要CSRF防护）
+                // 1. 禁用CSRF
                 .csrf(AbstractHttpConfigurer::disable)
-                // 2. 设置Session管理策略为无状态（STATELESS）
+                // 2. 配置Session为无状态
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 3. 配置异常处理
                 .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(customAuthenticationEntryPoint) // 设置自定义认证入口点
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
-                // 4. 配置匿名用户处理
-                .anonymous(anonymous -> anonymous.authorities("ROLE_GUEST"))
-                // 5. 配置请求授权
+                // 4. 配置请求授权
                 .authorizeHttpRequests(auth -> auth
-                        // 放行登录、刷新Token等公共路径
-                        .requestMatchers("/auth/login", "/auth/refresh", "auth/register").permitAll()
-                        // 其他所有请求都需要认证
+                        // 游客可访问的公共路径
+                        .requestMatchers("/auth/**", "/music/**", "/categories/**").permitAll()
+                        // 用户及以上角色可访问的路径
+                        .requestMatchers("/users/me/**", "/orders/**").hasAnyRole("USER", "ADMIN")
+                        // 仅管理员可访问的路径
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // 其他任何未匹配的请求都需要认证
                         .anyRequest().authenticated()
                 )
-                // 6. 将JWT认证过滤器添加到UsernamePasswordAuthenticationFilter之前
+                // 5. 将JWT认证过滤器添加到UsernamePasswordAuthenticationFilter之前
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
