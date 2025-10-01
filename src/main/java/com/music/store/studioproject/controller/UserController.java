@@ -1,9 +1,6 @@
 package com.music.store.studioproject.controller;
 
-import com.music.store.studioproject.dto.AddCollectionDto;
-import com.music.store.studioproject.dto.CartItemDto;
-import com.music.store.studioproject.dto.ChangePasswordDto;
-import com.music.store.studioproject.dto.MusicCollectionDto;
+import com.music.store.studioproject.dto.*;
 import com.music.store.studioproject.service.UserService;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,5 +104,20 @@ public class UserController {
     @PutMapping("/cart/items/{cartItemId}")
     public Response updateCartItem(@RequestBody CartItemDto cartItemDto,@PathVariable Integer cartItemId) {
         return userService.updateCartItem(cartItemId, cartItemDto.getQuantity());
+    }
+    /**
+     * 删除用户购物车中的音乐
+     * @Param deleteCartDto
+     * @Return Response
+     * @Author 郑鑫亮
+     * @Date 2025/10/1
+     *
+     * */
+    @DeleteMapping("cart/items")
+    public Response deleteCartItems(@RequestBody DeleteCartDto deleteCartDto) {
+        for (Integer cartItemId : deleteCartDto.getCartItemIds()) {
+            userService.updateCartItem(cartItemId, 0);
+        }
+        return Response.success("删除成功");
     }
 }
