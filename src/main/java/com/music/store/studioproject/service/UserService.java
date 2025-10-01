@@ -15,4 +15,7 @@ public interface UserService {
     Response<MusicCollectionDto> getCollections(int start, int size, int page);
 
     Response addCollection(Integer musicId);
+
+    Response removeCollection(Integer musicId);
+
 }

@@ -1,5 +1,6 @@
 package com.music.store.studioproject.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -139,6 +140,24 @@ public class UserServiceImpl implements UserService {
                 return Response.success("收藏成功");
             } else {
                 return Response.fail("收藏失败");
+            }
+        }
+    }
+
+    @Override
+    public Response removeCollection(Integer musicId) {
+        Long userId = UserContext.getUserId();
+        LambdaQueryWrapper<MusicCollection> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MusicCollection::getUserId, userId).eq(MusicCollection::getMusicId, musicId);
+        MusicCollection existingCollection = musicCollectionDao.selectOne(queryWrapper);
+        if (existingCollection == null) {
+            return Response.fail("音乐未收藏");
+        } else {
+            int rows = musicCollectionDao.delete(queryWrapper);
+            if (rows > 0) {
+                return Response.success("取消收藏成功");
+            } else {
+                return Response.fail("取消收藏失败");
             }
         }
     }

@@ -57,4 +57,16 @@ public class UserController {
     public Response addCollection(@RequestBody AddCollectionDto addCollectionDto) {
         return userService.addCollection(addCollectionDto.getMusicId());
     }
+    /**
+     * 从用户收藏中移除音乐
+     * @Param musicId
+     * @Return Response
+     * @Author 郑鑫亮
+     * @Date 2025/10/1
+     *
+     * */
+    @DeleteMapping("/collections/{musicId}")
+    public Response removeCollection(@PathVariable Integer musicId) {
+        return userService.removeCollection(musicId);
+    }
 }
