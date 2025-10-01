@@ -41,6 +41,10 @@ public class Response<T> {
     public static <T> Response<T> success(T data) {
         return new Response<>(200, "success", data);
     }
+    // 成功响应
+    public static <T> Response<T> success(T data, String msg) {
+        return new Response<>(200, msg, data);
+    }
 
     public static <T> Response<T> success() {
         return new Response<>(200, "success", null);

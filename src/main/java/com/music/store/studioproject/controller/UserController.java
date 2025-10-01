@@ -1,6 +1,7 @@
 package com.music.store.studioproject.controller;
 
 import com.music.store.studioproject.dto.ChangePasswordDto;
+import com.music.store.studioproject.dto.MusicCollectionDto;
 import com.music.store.studioproject.service.UserService;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,9 @@ public class UserController {
         return userService.changePassword(changePasswordDto);
     }
 
-/*
     @GetMapping("/collections/{page}/{size}")
-*/
-
+    public Response<MusicCollectionDto> collections(@PathVariable int page, @PathVariable int size) {
+        int start = (page - 1) * size;
+        return userService.getCollections(start, size, page);
+    }
 }
