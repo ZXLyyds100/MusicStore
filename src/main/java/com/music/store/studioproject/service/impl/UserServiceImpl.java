@@ -8,10 +8,7 @@ import com.music.store.studioproject.dao.MusicCollectionDao;
 import com.music.store.studioproject.dao.MusicInformationDao;
 import com.music.store.studioproject.dao.ShoppingCartDao;
 import com.music.store.studioproject.dao.UserDao;
-import com.music.store.studioproject.dto.CartItemDto;
-import com.music.store.studioproject.dto.ChangePasswordDto;
-import com.music.store.studioproject.dto.MusicCollectionDto;
-import com.music.store.studioproject.dto.MusicRecordDto;
+import com.music.store.studioproject.dto.*;
 import com.music.store.studioproject.entity.MusicCollection;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.entity.ShoppingCart;
@@ -24,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,4 +236,5 @@ public class UserServiceImpl implements UserService {
             return Response.fail("购物车项更新失败");
         }
     }
+
 }

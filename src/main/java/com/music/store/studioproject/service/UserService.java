@@ -3,6 +3,7 @@ package com.music.store.studioproject.service;
 import com.music.store.studioproject.dto.CartItemDto;
 import com.music.store.studioproject.dto.ChangePasswordDto;
 import com.music.store.studioproject.dto.MusicCollectionDto;
+import com.music.store.studioproject.dto.MusicPageDto;
 import com.music.store.studioproject.entity.User;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,6 @@ public interface UserService {
     Response addCartItem(Long musicId, Integer quantity);
 
     Response updateCartItem(Integer cartItemId, Integer quantity);
+
 
 }
