@@ -1,5 +1,6 @@
 package com.music.store.studioproject.controller;
 
+import com.music.store.studioproject.dto.AddMusicDto;
 import com.music.store.studioproject.dto.MusicPageDto;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.service.AdminService;
@@ -37,7 +38,7 @@ public class AdminController {
     }
 
     @PostMapping("/music")
-    public Response<MusicInformation> addMusic(@RequestBody MusicInformation musicInformation) {
-        return adminService.addMusic(musicInformation);
+    public Response<MusicInformation> addMusic(@RequestBody AddMusicDto addMusicDto) {
+        return adminService.addMusic(addMusicDto);
     }
 }
