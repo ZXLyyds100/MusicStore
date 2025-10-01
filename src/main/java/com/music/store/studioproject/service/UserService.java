@@ -1,10 +1,13 @@
 package com.music.store.studioproject.service;
 
+import com.music.store.studioproject.dto.CartItemDto;
 import com.music.store.studioproject.dto.ChangePasswordDto;
 import com.music.store.studioproject.dto.MusicCollectionDto;
 import com.music.store.studioproject.entity.User;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface UserService {
@@ -18,4 +21,5 @@ public interface UserService {
 
     Response removeCollection(Integer musicId);
 
+    Response<List<CartItemDto>> getCart();
 }

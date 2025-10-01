@@ -1,6 +1,7 @@
 package com.music.store.studioproject.controller;
 
 import com.music.store.studioproject.dto.AddCollectionDto;
+import com.music.store.studioproject.dto.CartItemDto;
 import com.music.store.studioproject.dto.ChangePasswordDto;
 import com.music.store.studioproject.dto.MusicCollectionDto;
 import com.music.store.studioproject.service.UserService;
@@ -8,6 +9,8 @@ import com.music.store.studioproject.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users/me")
@@ -68,5 +71,17 @@ public class UserController {
     @DeleteMapping("/collections/{musicId}")
     public Response removeCollection(@PathVariable Integer musicId) {
         return userService.removeCollection(musicId);
+    }
+    /**
+     * 获取用户购物车中的音乐列表
+     * @Param
+     * @Return Response<List<CartItemDto>>
+     * @Author 郑鑫亮
+     * @Date 2025/10/1
+     *
+     * */
+    @GetMapping("/cart")
+    public Response<List<CartItemDto>> getCart() {
+        return userService.getCart();
     }
 }

@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.music.store.studioproject.dao.MusicCollectionDao;
 import com.music.store.studioproject.dao.MusicInformationDao;
+import com.music.store.studioproject.dao.ShoppingCartDao;
 import com.music.store.studioproject.dao.UserDao;
+import com.music.store.studioproject.dto.CartItemDto;
 import com.music.store.studioproject.dto.ChangePasswordDto;
 import com.music.store.studioproject.dto.MusicCollectionDto;
 import com.music.store.studioproject.dto.MusicRecordDto;
 import com.music.store.studioproject.entity.MusicCollection;
 import com.music.store.studioproject.entity.MusicInformation;
+import com.music.store.studioproject.entity.ShoppingCart;
 import com.music.store.studioproject.entity.User;
 import com.music.store.studioproject.exception.BusinessException;
 import com.music.store.studioproject.service.UserService;
@@ -36,8 +39,8 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private MusicInformationDao musicInformationDao;
-
-
+    @Autowired
+    private ShoppingCartDao shoppingCartDao;
     @Override
     public void saveUser(User newUser) {
         User user = userDao.findByUsername(newUser.getUsername());
@@ -159,6 +162,36 @@ public class UserServiceImpl implements UserService {
             } else {
                 return Response.fail("取消收藏失败");
             }
+        }
+    }
+
+    @Override
+    public Response<List<CartItemDto>> getCart() {
+        Long userId = UserContext.getUserId();
+        LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ShoppingCart::getUserId, userId);
+        List<ShoppingCart> cartItems = shoppingCartDao.selectList(queryWrapper);
+        if (CollectionUtils.isEmpty(cartItems)) {
+            return Response.success(new ArrayList<>(), "购物车为空");
+        } else {
+            List<CartItemDto> cartItemDtos = new ArrayList<>();
+            cartItems.stream()
+                    .forEach(item -> {
+                        CartItemDto cartItemDto = new CartItemDto();
+                        cartItemDto.setCartItemId(item.getId());
+                        cartItemDto.setQuantity(item.getCount());
+                        LambdaQueryWrapper<MusicInformation> musicQuery = new LambdaQueryWrapper<>();
+                        musicQuery.eq(MusicInformation::getId, item.getMusicId());
+                        MusicInformation music = musicInformationDao.selectOne(musicQuery);
+                        if (music != null) {
+                            cartItemDto.setTitle(music.getMusicName());
+                            cartItemDto.setPrice(music.getPrice().doubleValue());
+                            cartItemDto.setArtist(music.getSinger());
+                            cartItemDto.setMusicId(music.getId());
+                            cartItemDtos.add(cartItemDto);
+                        }
+                    });
+            return Response.success(cartItemDtos, "获取购物车成功");
         }
     }
 }
