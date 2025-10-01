@@ -337,8 +337,7 @@
 - **请求体**:
   ```json
   {
-    "cartItemIds": [1, 2],
-    "shippingAddress": "某某省某某市某某区某某街道123号"
+    "cartItemIds": [1, 2]
   }
   ```
 - **成功响应 (200)**: 返回新创建的订单号。
@@ -403,7 +402,6 @@
       "status": "PAID",
       "createTime": "2025-09-30T10:00:00",
       "payTime": "2025-09-30T10:01:00",
-      "shippingAddress": "某某省某某市某某区某某街道123号",
       "items": [
         {
           "musicId": 101,
