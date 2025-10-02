@@ -29,4 +29,5 @@ public interface UserService {
     Response updateCartItem(Integer cartItemId, Integer quantity);
 
 
+    Response<User> addUser(User user);
 }

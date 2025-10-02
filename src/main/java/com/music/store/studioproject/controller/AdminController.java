@@ -4,6 +4,7 @@ import com.music.store.studioproject.dto.*;
 import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.entity.OrderInformation;
+import com.music.store.studioproject.entity.User;
 import com.music.store.studioproject.service.AdminService;
 import com.music.store.studioproject.service.GuestService;
 import com.music.store.studioproject.service.UserService;
@@ -20,6 +21,8 @@ public class AdminController {
     private GuestService guestService;
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 音乐浏览与搜索接口
@@ -173,5 +176,40 @@ public class AdminController {
     @DeleteMapping("/orders/{orderNo}")
     public Response deleteOrder(@PathVariable String orderNo) {
         return adminService.updateOrderStatus(orderNo, 4); // 假设4表示已取消状态
+    }
+    /**
+     * 获取用户列表
+     * @Param username,roleId,status,page,size
+     * @Return Response<GetUserDto>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @GetMapping("/users")
+    public Response<GetUserDto> getUsers(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) Integer roleId,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        // Null检查，避免直接调用intValue()导致NullPointerException
+        int roleIdValue = (roleId != null) ? roleId : 0; // 默认值为0
+        int statusValue = (status != null) ? status : 0; // 默认值为0
+
+        return adminService.getUsers(username, roleIdValue, statusValue, page, size);
+    }
+    /**
+     * 添加新用户
+     * @Param user
+     * @Return Response<User>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PostMapping("/users")
+    public Response<User> addUser(@RequestBody User user) {
+
+        return userService.addUser(user);
     }
 }

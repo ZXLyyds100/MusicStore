@@ -237,4 +237,22 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Response<User> addUser(User user) {
+        if (!StringUtils.hasText(user.getUsername()) || !StringUtils.hasText(user.getPassword())) {
+            return Response.fail("用户名和密码不能为空");
+        }
+        User existingUser = userDao.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            return Response.fail("用户已存在");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        int rows = userDao.insert(user);
+        if (rows > 0) {
+            return Response.success(user, "用户注册成功");
+        } else {
+            return Response.fail("用户注册失败");
+        }
+    }
+
 }

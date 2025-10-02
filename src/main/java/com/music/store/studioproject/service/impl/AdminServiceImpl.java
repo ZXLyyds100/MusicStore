@@ -3,17 +3,12 @@ package com.music.store.studioproject.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.music.store.studioproject.dao.MusicCategoryDao;
-import com.music.store.studioproject.dao.MusicInformationDao;
-import com.music.store.studioproject.dao.OrderInformationDao;
-import com.music.store.studioproject.dao.OrderItemDao;
+import com.music.store.studioproject.dao.*;
 import com.music.store.studioproject.dto.AddMusicDto;
 import com.music.store.studioproject.dto.GetOrderDetailsDto;
 import com.music.store.studioproject.dto.GetOrdersDto;
-import com.music.store.studioproject.entity.MusicCategory;
-import com.music.store.studioproject.entity.MusicInformation;
-import com.music.store.studioproject.entity.OrderInformation;
-import com.music.store.studioproject.entity.OrderItem;
+import com.music.store.studioproject.dto.GetUserDto;
+import com.music.store.studioproject.entity.*;
 import com.music.store.studioproject.service.AdminService;
 import com.music.store.studioproject.service.OrderService;
 import com.music.store.studioproject.utils.Response;
@@ -35,6 +30,8 @@ public class AdminServiceImpl implements AdminService {
     private OrderInformationDao orderInformationDao;
     @Autowired
     private OrderItemDao orderItemDao;
+    @Autowired
+    private UserDao userDao;
     @Override
     public Response<MusicInformation> addMusic(AddMusicDto musicInformation) {
         LambdaQueryWrapper<MusicInformation> queryWrapper = new LambdaQueryWrapper<MusicInformation>();
@@ -175,5 +172,26 @@ public class AdminServiceImpl implements AdminService {
             orderInformationDao.updateById(orderInformation);
             return Response.success(orderInformation, "订单状态更新成功");
         }
+    }
+
+    @Override
+    public Response<GetUserDto> getUsers(String username, int roleId, int status, int page, int size) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>();
+        if (username != null && !username.isEmpty()) {
+            queryWrapper.like(User::getUsername, username);
+        }
+        if (roleId != 0) {
+            queryWrapper.eq(User::getRoleId, roleId);
+        }
+        if (status != -1) {
+            queryWrapper.eq(User::getStatus, status);
+        }
+        Page<User> userPage = new Page<>(page, size);
+        userDao.selectPage(userPage, queryWrapper);
+        List<User> records = userPage.getRecords();
+        GetUserDto getUserDto = new GetUserDto();
+        Integer total = (int) userPage.getTotal();
+        getUserDto.setRecords(records);
+        return Response.success(getUserDto, "获取用户列表成功");
     }
 }
