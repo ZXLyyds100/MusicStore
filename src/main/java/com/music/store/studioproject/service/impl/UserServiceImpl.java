@@ -256,4 +256,44 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Response<User> updateUser(Long id, String nickname, Integer status, String phone) {
+        User user = userDao.findById(id);
+        if (user == null) {
+            return Response.fail("用户不存在");
+        }
+        if (StringUtils.hasText(nickname)) {
+            user.setNickname(nickname);
+        }
+        if (status != null) {
+            user.setStatus(status);
+        }
+        if (StringUtils.hasText(phone)) {
+            user.setPhone(phone);
+        }
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", id);
+        int rows = userDao.update(user, updateWrapper);
+        if (rows > 0) {
+            user = userDao.findById(id);
+            return Response.success(user, "用户信息更新成功");
+        } else {
+            return Response.fail("用户信息更新失败");
+        }
+    }
+
+    @Override
+    public Response deleteUser(Long id) {
+        User user = userDao.findById(id);
+        if (user == null) {
+            return Response.fail("用户不存在");
+        }
+        int rows = userDao.deleteById(id);
+        if (rows > 0) {
+            return Response.success("用户删除成功");
+        } else {
+            return Response.fail("用户删除失败");
+        }
+    }
+
 }

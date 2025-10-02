@@ -30,4 +30,8 @@ public interface UserService {
 
 
     Response<User> addUser(User user);
+
+    Response<User> updateUser(Long id, String nickname, Integer status, String phone);
+
+    Response deleteUser(Long id);
 }

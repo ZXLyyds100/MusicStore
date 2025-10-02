@@ -1,10 +1,7 @@
 package com.music.store.studioproject.controller;
 
 import com.music.store.studioproject.dto.*;
-import com.music.store.studioproject.entity.MusicCategory;
-import com.music.store.studioproject.entity.MusicInformation;
-import com.music.store.studioproject.entity.OrderInformation;
-import com.music.store.studioproject.entity.User;
+import com.music.store.studioproject.entity.*;
 import com.music.store.studioproject.service.AdminService;
 import com.music.store.studioproject.service.GuestService;
 import com.music.store.studioproject.service.UserService;
@@ -211,5 +208,40 @@ public class AdminController {
     public Response<User> addUser(@RequestBody User user) {
 
         return userService.addUser(user);
+    }
+    /**
+     * 更新用户信息
+     * @Param id,user
+     * @Return Response<User>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PutMapping("/users/{id}")
+    public Response<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.updateUser(id, user.getNickname(), user.getStatus(), user.getPhone());
+    }
+    /**
+     * 删除用户
+     * @Param id
+     * @Return Response
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @DeleteMapping("/users/{id}")
+    public Response deleteUser(@PathVariable Long id) {
+        return userService.deleteUser(id);
+    }
+    /**
+     * 获取网站配置
+     * @Return Response<List<WebsiteConfigEntity>>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @GetMapping("/website-config")
+    public Response<List<WebsiteConfigEntity>> getWebsiteConfig() {
+        return adminService.getWebsiteConfig();
     }
 }

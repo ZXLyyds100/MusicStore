@@ -32,6 +32,8 @@ public class AdminServiceImpl implements AdminService {
     private OrderItemDao orderItemDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private WebsiteConfigDao websiteConfigDao;
     @Override
     public Response<MusicInformation> addMusic(AddMusicDto musicInformation) {
         LambdaQueryWrapper<MusicInformation> queryWrapper = new LambdaQueryWrapper<MusicInformation>();
@@ -193,5 +195,12 @@ public class AdminServiceImpl implements AdminService {
         Integer total = (int) userPage.getTotal();
         getUserDto.setRecords(records);
         return Response.success(getUserDto, "获取用户列表成功");
+    }
+
+    @Override
+    public Response<List<WebsiteConfigEntity>> getWebsiteConfig() {
+        return websiteConfigDao.selectList(null) != null ?
+                Response.success(websiteConfigDao.selectList(null), "获取网站配置成功") :
+                Response.fail("获取网站配置失败");
     }
 }
