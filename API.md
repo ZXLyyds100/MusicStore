@@ -650,7 +650,6 @@
 - **URL**: `/admin/music/{id}`
 - **请求方法**: `DELETE`
 - **路径参数**: `id`（音乐ID，对应`music_info.id`）
-- **说明**: 执行逻辑删除，更新`isDeleted`为1
 
 - **成功响应 (200)**:
 ```json
