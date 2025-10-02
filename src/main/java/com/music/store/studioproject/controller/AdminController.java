@@ -3,6 +3,7 @@ package com.music.store.studioproject.controller;
 import com.music.store.studioproject.dto.AddMusicDto;
 import com.music.store.studioproject.dto.MusicPageDto;
 import com.music.store.studioproject.dto.UpdateMusicDto;
+import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.service.AdminService;
 import com.music.store.studioproject.service.GuestService;
@@ -10,6 +11,8 @@ import com.music.store.studioproject.service.UserService;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -72,5 +75,13 @@ public class AdminController {
     @DeleteMapping("/music/{id}")
     public Response deleteMusic(@PathVariable Long id) {
         return adminService.deleteMusic(id);
+    }
+    /**
+     * 获取所有音乐分类
+     * @return 音乐分类列表
+     */
+    @GetMapping("/music/categories")
+    public Response<List<MusicCategory>> getCategories() {
+        return guestService.getCategories();
     }
 }
