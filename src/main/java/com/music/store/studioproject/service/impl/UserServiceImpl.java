@@ -249,6 +249,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         int rows = userDao.insert(user);
         if (rows > 0) {
+            user = userDao.findByUsername(user.getUsername());
             return Response.success(user, "用户注册成功");
         } else {
             return Response.fail("用户注册失败");
