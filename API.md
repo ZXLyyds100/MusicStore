@@ -897,7 +897,6 @@
 - **URL**: `/admin/orders/{orderNo}`
 - **请求方法**: `DELETE`
 - **路径参数**: `orderNo`（订单编号，对应`order_main.order_no`）
-- **说明**: 执行逻辑删除（若表设计包含`isDeleted`字段，更新为1；若无则物理删除，需与数据库表结构匹配）
 
 - **成功响应 (200)**:
 ```json

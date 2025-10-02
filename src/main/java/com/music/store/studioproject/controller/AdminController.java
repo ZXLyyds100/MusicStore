@@ -162,5 +162,16 @@ public class AdminController {
         // 这里可以添加对 orderStatusDto.getOrderStatus() 的验证
         return adminService.updateOrderStatus(orderNo, orderStatusDto.getOrderStatus());
     }
-
+    /**
+     * 取消订单
+     * @Param orderNo
+     * @Return Response
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @DeleteMapping("/orders/{orderNo}")
+    public Response deleteOrder(@PathVariable String orderNo) {
+        return adminService.updateOrderStatus(orderNo, 4); // 假设4表示已取消状态
+    }
 }
