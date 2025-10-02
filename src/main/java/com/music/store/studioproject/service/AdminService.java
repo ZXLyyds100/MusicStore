@@ -10,4 +10,6 @@ public interface AdminService {
     Response<MusicInformation> addMusic(AddMusicDto musicInformation);
 
     Response<MusicInformation> updateMusic(Long id, String musicName, Double price, String coverUrl);
+
+    Response deleteMusic(Long id);
 }

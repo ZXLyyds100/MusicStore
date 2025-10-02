@@ -51,4 +51,14 @@ public class AdminServiceImpl implements AdminService {
         musicInformationDao.updateById(musicInformation);
         return Response.success(musicInformation, "音乐信息更新成功");
     }
+
+    @Override
+    public Response deleteMusic(Long id) {
+        MusicInformation musicInformation = musicInformationDao.selectById(id);
+        if (musicInformation == null) {
+            return Response.fail("音乐不存在");
+        }
+        musicInformationDao.deleteById(id);
+        return Response.success("音乐删除成功");
+    }
 }

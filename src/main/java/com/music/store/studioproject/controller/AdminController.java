@@ -2,6 +2,7 @@ package com.music.store.studioproject.controller;
 
 import com.music.store.studioproject.dto.AddMusicDto;
 import com.music.store.studioproject.dto.MusicPageDto;
+import com.music.store.studioproject.dto.UpdateMusicDto;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.service.AdminService;
 import com.music.store.studioproject.service.GuestService;
@@ -36,9 +37,40 @@ public class AdminController {
         MusicPageDto musicPage = guestService.searchMusic(keyword, categoryId, page, size);
         return Response.success(musicPage);
     }
-
+    /**
+     * 添加音乐
+     * @Param addMusicDto
+     * @Return Response<MusicInformation>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
     @PostMapping("/music")
     public Response<MusicInformation> addMusic(@RequestBody AddMusicDto addMusicDto) {
         return adminService.addMusic(addMusicDto);
+    }
+    /**
+     * 更新音乐信息
+     * @Param id,updateMusicDto
+     * @Return Response<MusicInformation>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PutMapping("/music/{id}")
+    public Response<MusicInformation> updateMusic(@PathVariable Long id, @RequestBody UpdateMusicDto addMusicDto) {
+        return adminService.updateMusic(id, addMusicDto.getMusicName(), addMusicDto.getPrice(), addMusicDto.getCoverUrl());
+    }
+    /**
+     * 删除音乐
+     * @Param id
+     * @Return Response
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @DeleteMapping("/music/{id}")
+    public Response deleteMusic(@PathVariable Long id) {
+        return adminService.deleteMusic(id);
     }
 }
