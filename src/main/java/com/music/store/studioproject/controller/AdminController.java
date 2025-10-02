@@ -1,9 +1,6 @@
 package com.music.store.studioproject.controller;
 
-import com.music.store.studioproject.dto.AddMusicDto;
-import com.music.store.studioproject.dto.GetOrdersDto;
-import com.music.store.studioproject.dto.MusicPageDto;
-import com.music.store.studioproject.dto.UpdateMusicDto;
+import com.music.store.studioproject.dto.*;
 import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.service.AdminService;
@@ -121,7 +118,15 @@ public class AdminController {
     public Response deleteCategory(@PathVariable Long id) {
         return adminService.deleteCategory(id);
     }
-    @GetMapping("orders")
+    /**
+     * 获取订单列表
+     * @Param userId,orderStatus,orderNo,page,size
+     * @Return Response<GetOrdersDto>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @GetMapping("/orders")
     public Response<GetOrdersDto> getOrders(
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) Integer orderStatus,
@@ -131,4 +136,17 @@ public class AdminController {
 
         return adminService.getOrders(userId, orderStatus, orderNo, page, size);
     }
+    /**
+     * 获取订单详情
+     * @Param orderNo
+     * @Return Response<GetOrderDetailsDto>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @GetMapping("orders/{orderNo}")
+    public Response<GetOrderDetailsDto> getOrderDetail(@PathVariable String orderNo) {
+        return adminService.getOrderDetail(orderNo);
+    }
+
 }

@@ -1,16 +1,19 @@
 package com.music.store.studioproject.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.music.store.studioproject.dao.MusicCategoryDao;
 import com.music.store.studioproject.dao.MusicInformationDao;
 import com.music.store.studioproject.dao.OrderInformationDao;
 import com.music.store.studioproject.dao.OrderItemDao;
 import com.music.store.studioproject.dto.AddMusicDto;
+import com.music.store.studioproject.dto.GetOrderDetailsDto;
 import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.entity.OrderInformation;
+import com.music.store.studioproject.entity.OrderItem;
 import com.music.store.studioproject.service.AdminService;
 import com.music.store.studioproject.service.OrderService;
 import com.music.store.studioproject.utils.Response;
@@ -139,5 +142,24 @@ public class AdminServiceImpl implements AdminService {
         getOrdersDto.setRecords(records);
         return Response.success(getOrdersDto, "获取订单列表成功");
 
+    }
+
+    @Override
+    public Response<GetOrderDetailsDto> getOrderDetail(String orderNo) {
+        QueryWrapper<OrderInformation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        OrderInformation orderInformation = orderInformationDao.selectOne(queryWrapper);
+        if (orderInformation == null) {
+            return Response.fail("订单不存在");
+        } else {
+            Long orderId = orderInformation.getId();
+            QueryWrapper<OrderItem> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("order_id", orderId);
+            List<OrderItem> orderItems = orderItemDao.selectList(queryWrapper1);
+            GetOrderDetailsDto getOrderDetailsDto = new GetOrderDetailsDto();
+            getOrderDetailsDto.setOrderItems(orderItems);
+            getOrderDetailsDto.setOrderMain(orderInformation);
+            return Response.success(getOrderDetailsDto);
+        }
     }
 }
