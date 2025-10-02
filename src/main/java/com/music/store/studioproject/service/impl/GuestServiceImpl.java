@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.music.store.studioproject.dao.MusicCategoryDao;
 import com.music.store.studioproject.dao.MusicInformationDao;
+import com.music.store.studioproject.dao.OrderInformationDao;
+import com.music.store.studioproject.dao.OrderItemDao;
+import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.dto.MusicPageDto;
 import com.music.store.studioproject.dto.MusicRecordDto;
 import com.music.store.studioproject.entity.MusicCategory;
@@ -23,6 +26,10 @@ public class GuestServiceImpl implements GuestService {
     private MusicInformationDao musicInformationDao;
     @Autowired
     private MusicCategoryDao musicCategoryDao;
+    @Autowired
+    private OrderInformationDao orderInformationDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
     @Override
     public MusicPageDto searchMusic(String keyword, Integer categoryId, int page, int size) {
         // 1. 创建MyBatis-Plus的分页对象
@@ -76,4 +83,6 @@ public class GuestServiceImpl implements GuestService {
     public Response<List<MusicCategory>> getCategories() {
         return Response.success(musicCategoryDao.selectList(null));
     }
+
+
 }

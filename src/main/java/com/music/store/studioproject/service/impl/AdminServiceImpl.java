@@ -1,17 +1,24 @@
 package com.music.store.studioproject.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.music.store.studioproject.dao.MusicCategoryDao;
 import com.music.store.studioproject.dao.MusicInformationDao;
+import com.music.store.studioproject.dao.OrderInformationDao;
+import com.music.store.studioproject.dao.OrderItemDao;
 import com.music.store.studioproject.dto.AddMusicDto;
+import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
+import com.music.store.studioproject.entity.OrderInformation;
 import com.music.store.studioproject.service.AdminService;
+import com.music.store.studioproject.service.OrderService;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -19,6 +26,12 @@ public class AdminServiceImpl implements AdminService {
     private MusicInformationDao musicInformationDao;
     @Autowired
     private MusicCategoryDao musicCategoryDao;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private OrderInformationDao orderInformationDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
     @Override
     public Response<MusicInformation> addMusic(AddMusicDto musicInformation) {
         LambdaQueryWrapper<MusicInformation> queryWrapper = new LambdaQueryWrapper<MusicInformation>();
@@ -100,5 +113,31 @@ public class AdminServiceImpl implements AdminService {
         }
         musicCategoryDao.deleteById(id);
         return Response.success("分类删除成功");
+    }
+
+    @Override
+    public Response<GetOrdersDto> getOrders(Long userId, Integer orderStatus, String orderNo, int page, int size) {
+        // 自己写一套，其中userId, orderStatus, orderNo都可以为空
+        // 不调用orderService
+        LambdaQueryWrapper<OrderInformation> queryWrapper = new LambdaQueryWrapper<OrderInformation>();
+        if (userId != null) {
+            queryWrapper.eq(OrderInformation::getUserId, userId);
+        }
+        if (orderStatus != null) {
+            queryWrapper.eq(OrderInformation::getOrderStatus, orderStatus);
+        }
+        if (orderNo != null && !orderNo.isEmpty()) {
+            queryWrapper.eq(OrderInformation::getOrderNo, orderNo);
+        }
+        Page<OrderInformation> orderPage = new Page<>(page, size);
+        orderInformationDao.selectPage(orderPage, queryWrapper);
+        List<OrderInformation> records = orderPage.getRecords();
+        GetOrdersDto getOrdersDto = new GetOrdersDto();
+        Integer total = (int) orderPage.getTotal();
+        getOrdersDto.setPage(page);
+        getOrdersDto.setTotal(total);
+        getOrdersDto.setRecords(records);
+        return Response.success(getOrdersDto, "获取订单列表成功");
+
     }
 }

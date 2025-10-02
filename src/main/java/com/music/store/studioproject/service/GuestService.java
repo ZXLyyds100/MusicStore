@@ -1,5 +1,6 @@
 package com.music.store.studioproject.service;
 
+import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.dto.MusicPageDto;
 import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
@@ -16,4 +17,5 @@ public interface GuestService {
     MusicInformation getMusicById(Long id);
 
     Response<List<MusicCategory>> getCategories();
+
 }

@@ -1,6 +1,7 @@
 package com.music.store.studioproject.service;
 
 import com.music.store.studioproject.dto.AddMusicDto;
+import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.utils.Response;
@@ -19,4 +20,6 @@ public interface AdminService {
     Response<MusicCategory> updateCategory(Long id, String categoryDesc, Integer sort);
 
     Response deleteCategory(Long id);
+
+    Response<GetOrdersDto> getOrders(Long userId, Integer orderStatus, String orderNo, int page, int size);
 }

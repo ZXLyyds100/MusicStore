@@ -1,6 +1,7 @@
 package com.music.store.studioproject.controller;
 
 import com.music.store.studioproject.dto.AddMusicDto;
+import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.dto.MusicPageDto;
 import com.music.store.studioproject.dto.UpdateMusicDto;
 import com.music.store.studioproject.entity.MusicCategory;
@@ -30,7 +31,7 @@ public class AdminController {
      * @param size       每页数量（可选，默认为10）
      * @return 分页后的音乐列表
      */
-    @GetMapping("/music/{keyword}/{categoryId}/{page}/{size}")
+    @GetMapping("/music")
     public Response<MusicPageDto> searchMusic(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Integer categoryId,
@@ -119,5 +120,15 @@ public class AdminController {
     @DeleteMapping("/music/categories/{id}")
     public Response deleteCategory(@PathVariable Long id) {
         return adminService.deleteCategory(id);
+    }
+    @GetMapping("orders")
+    public Response<GetOrdersDto> getOrders(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Integer orderStatus,
+            @RequestParam(required = false) String orderNo,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return adminService.getOrders(userId, orderStatus, orderNo, page, size);
     }
 }
