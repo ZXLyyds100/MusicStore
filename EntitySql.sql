@@ -43,23 +43,7 @@ SELECT 'admin', '$2a$10$7T4Y6Z7X8W9V0U1S2D3F4G5H6J7K8L9M0N1O2P3Q4R5S6T7U8V9W0', 
 FROM sys_role r WHERE r.role_name = 'ROLE_ADMIN'
     ON DUPLICATE KEY UPDATE password = VALUES(password), role_id = VALUES(role_id);
 
--- 4. 用户-角色中间表（sys_user_role） - 已废弃
-/*
-CREATE TABLE IF NOT EXISTS sys_user_role (
-                                             id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '中间表ID',
-                                             user_id BIGINT NOT NULL COMMENT '用户ID（关联sys_user.id）',
-                                             role_id INT NOT NULL COMMENT '角色ID（关联sys_role.id）',
-                                             create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                             UNIQUE KEY uk_user_role (user_id, role_id) COMMENT '用户-角色组合唯一',
-    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
-    INDEX idx_role_id (role_id) COMMENT '角色ID索引'
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户-角色关联表';
 
--- 给默认管理员分配ADMIN角色
-INSERT INTO sys_user_role (user_id, role_id)
-SELECT (SELECT id FROM sys_user WHERE username = 'admin'), (SELECT id FROM sys_role WHERE role_name = 'ROLE_ADMIN')
-    ON DUPLICATE KEY UPDATE user_id = VALUES(user_id);
-*/
 
 -- 5. 音乐分类表（music_category）
 CREATE TABLE IF NOT EXISTS music_category (
