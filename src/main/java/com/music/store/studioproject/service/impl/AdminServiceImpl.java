@@ -38,4 +38,17 @@ public class AdminServiceImpl implements AdminService {
             return Response.success(music);
         }
     }
+
+    @Override
+    public Response<MusicInformation> updateMusic(Long id, String musicName, Double price, String coverUrl) {
+        MusicInformation musicInformation = musicInformationDao.selectById(id);
+        if (musicInformation == null) {
+            return Response.fail("音乐不存在");
+        }
+        musicInformation.setMusicName(musicName);
+        musicInformation.setPrice(BigDecimal.valueOf(price));
+        musicInformation.setCoverUrl(coverUrl);
+        musicInformationDao.updateById(musicInformation);
+        return Response.success(musicInformation, "音乐信息更新成功");
+    }
 }
