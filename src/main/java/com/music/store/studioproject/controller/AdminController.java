@@ -96,4 +96,16 @@ public class AdminController {
     public Response<MusicCategory> addCategory(@RequestBody MusicCategory musicCategory) {
         return adminService.addCategory(musicCategory);
     }
+    /**
+     * 更新音乐分类
+     * @Param id,musicCategory
+     * @Return Response<MusicCategory>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PutMapping("/music/categories/{id}")
+    public Response<MusicCategory> updateCategory(@PathVariable Long id, @RequestBody MusicCategory musicCategory) {
+        return adminService.updateCategory(id, musicCategory.getCategoryDesc(), musicCategory.getSort());
+    }
 }

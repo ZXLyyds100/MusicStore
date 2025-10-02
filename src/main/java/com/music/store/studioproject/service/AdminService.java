@@ -15,4 +15,6 @@ public interface AdminService {
     Response deleteMusic(Long id);
 
     Response<MusicCategory> addCategory(MusicCategory musicCategory);
+
+    Response<MusicCategory> updateCategory(Long id, String categoryDesc, Integer sort);
 }

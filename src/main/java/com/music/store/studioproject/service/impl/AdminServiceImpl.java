@@ -79,4 +79,16 @@ public class AdminServiceImpl implements AdminService {
             return Response.success(musicCategory, "分类添加成功");
         }
     }
+
+    @Override
+    public Response<MusicCategory> updateCategory(Long id, String categoryDesc, Integer sort) {
+        MusicCategory musicCategory = musicCategoryDao.selectById(id);
+        if (musicCategory == null) {
+            return Response.fail("分类不存在");
+        }
+        musicCategory.setCategoryDesc(categoryDesc);
+        musicCategory.setSort(sort);
+        musicCategoryDao.updateById(musicCategory);
+        return Response.success(musicCategory, "分类更新成功");
+    }
 }
