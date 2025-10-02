@@ -84,4 +84,16 @@ public class AdminController {
     public Response<List<MusicCategory>> getCategories() {
         return guestService.getCategories();
     }
+    /**
+     * 添加音乐分类
+     * @Param musicCategory
+     * @Return Response<MusicCategory>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PostMapping("/music/categories")
+    public Response<MusicCategory> addCategory(@RequestBody MusicCategory musicCategory) {
+        return adminService.addCategory(musicCategory);
+    }
 }

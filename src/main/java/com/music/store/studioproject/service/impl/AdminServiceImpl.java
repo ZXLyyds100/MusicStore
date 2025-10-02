@@ -1,8 +1,10 @@
 package com.music.store.studioproject.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.music.store.studioproject.dao.MusicCategoryDao;
 import com.music.store.studioproject.dao.MusicInformationDao;
 import com.music.store.studioproject.dto.AddMusicDto;
+import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
 import com.music.store.studioproject.service.AdminService;
 import com.music.store.studioproject.utils.Response;
@@ -15,6 +17,8 @@ import java.math.BigDecimal;
 public class AdminServiceImpl implements AdminService {
     @Autowired
     private MusicInformationDao musicInformationDao;
+    @Autowired
+    private MusicCategoryDao musicCategoryDao;
     @Override
     public Response<MusicInformation> addMusic(AddMusicDto musicInformation) {
         LambdaQueryWrapper<MusicInformation> queryWrapper = new LambdaQueryWrapper<MusicInformation>();
@@ -60,5 +64,19 @@ public class AdminServiceImpl implements AdminService {
         }
         musicInformationDao.deleteById(id);
         return Response.success("音乐删除成功");
+    }
+
+    @Override
+    public Response<MusicCategory> addCategory(MusicCategory musicCategory) {
+        LambdaQueryWrapper<MusicCategory> queryWrapper = new LambdaQueryWrapper<MusicCategory>();
+        queryWrapper.eq(MusicCategory::getCategoryName, musicCategory.getCategoryName());
+        MusicCategory category = musicCategoryDao.selectOne(queryWrapper);
+        if (category != null) {
+            return Response.fail("分类已存在");
+        } else {
+            musicCategoryDao.insert(musicCategory);
+            musicCategory = musicCategoryDao.selectOne(queryWrapper);
+            return Response.success(musicCategory, "分类添加成功");
+        }
     }
 }
