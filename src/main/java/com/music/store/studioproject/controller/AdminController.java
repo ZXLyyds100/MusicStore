@@ -108,4 +108,16 @@ public class AdminController {
     public Response<MusicCategory> updateCategory(@PathVariable Long id, @RequestBody MusicCategory musicCategory) {
         return adminService.updateCategory(id, musicCategory.getCategoryDesc(), musicCategory.getSort());
     }
+    /**
+     * 删除音乐分类
+     * @Param id
+     * @Return Response
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @DeleteMapping("/music/categories/{id}")
+    public Response deleteCategory(@PathVariable Long id) {
+        return adminService.deleteCategory(id);
+    }
 }

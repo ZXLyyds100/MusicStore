@@ -91,4 +91,14 @@ public class AdminServiceImpl implements AdminService {
         musicCategoryDao.updateById(musicCategory);
         return Response.success(musicCategory, "分类更新成功");
     }
+
+    @Override
+    public Response deleteCategory(Long id) {
+        MusicCategory musicCategory = musicCategoryDao.selectById(id);
+        if (musicCategory == null) {
+            return Response.fail("分类不存在");
+        }
+        musicCategoryDao.deleteById(id);
+        return Response.success("分类删除成功");
+    }
 }
