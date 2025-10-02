@@ -3,6 +3,7 @@ package com.music.store.studioproject.controller;
 import com.music.store.studioproject.dto.*;
 import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
+import com.music.store.studioproject.entity.OrderInformation;
 import com.music.store.studioproject.service.AdminService;
 import com.music.store.studioproject.service.GuestService;
 import com.music.store.studioproject.service.UserService;
@@ -147,6 +148,19 @@ public class AdminController {
     @GetMapping("orders/{orderNo}")
     public Response<GetOrderDetailsDto> getOrderDetail(@PathVariable String orderNo) {
         return adminService.getOrderDetail(orderNo);
+    }
+    /**
+     * 更新订单状态
+     * @Param orderNo,orderStatusDto
+     * @Return Response<OrderInformation>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PutMapping("/orders/{orderNo}/status")
+    public Response<OrderInformation> updateOrderStatus(@PathVariable String orderNo, @RequestBody OrderStatusDto orderStatusDto) {
+        // 这里可以添加对 orderStatusDto.getOrderStatus() 的验证
+        return adminService.updateOrderStatus(orderNo, orderStatusDto.getOrderStatus());
     }
 
 }

@@ -162,4 +162,18 @@ public class AdminServiceImpl implements AdminService {
             return Response.success(getOrderDetailsDto);
         }
     }
+
+    @Override
+    public Response<OrderInformation> updateOrderStatus(String orderNo, Integer orderStatus) {
+        QueryWrapper<OrderInformation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        OrderInformation orderInformation = orderInformationDao.selectOne(queryWrapper);
+        if (orderInformation == null) {
+            return Response.fail("订单不存在");
+        } else {
+            orderInformation.setOrderStatus(orderStatus);
+            orderInformationDao.updateById(orderInformation);
+            return Response.success(orderInformation, "订单状态更新成功");
+        }
+    }
 }

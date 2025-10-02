@@ -5,6 +5,7 @@ import com.music.store.studioproject.dto.GetOrderDetailsDto;
 import com.music.store.studioproject.dto.GetOrdersDto;
 import com.music.store.studioproject.entity.MusicCategory;
 import com.music.store.studioproject.entity.MusicInformation;
+import com.music.store.studioproject.entity.OrderInformation;
 import com.music.store.studioproject.utils.Response;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +26,7 @@ public interface AdminService {
     Response<GetOrdersDto> getOrders(Long userId, Integer orderStatus, String orderNo, int page, int size);
 
     Response<GetOrderDetailsDto> getOrderDetail(String orderNo);
+
+    Response<OrderInformation> updateOrderStatus(String orderNo, Integer orderStatus);
+
 }
