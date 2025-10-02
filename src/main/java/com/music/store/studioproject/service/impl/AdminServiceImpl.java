@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -202,5 +203,14 @@ public class AdminServiceImpl implements AdminService {
         return websiteConfigDao.selectList(null) != null ?
                 Response.success(websiteConfigDao.selectList(null), "获取网站配置成功") :
                 Response.fail("获取网站配置失败");
+    }
+
+    @Override
+    public Response<List<WebsiteConfigEntity>> updateWebsiteConfig(List<WebsiteConfigEntity> configs) {
+        for (WebsiteConfigEntity config : configs) {
+            websiteConfigDao.updateById(config);
+        }
+        configs.stream().forEach(config -> {config.setUpdateTime(LocalDateTime.now());});
+        return Response.success(configs, "更新网站配置成功");
     }
 }

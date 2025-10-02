@@ -33,4 +33,6 @@ public interface AdminService {
     Response<GetUserDto> getUsers(String username, int roleId, int status, int page, int size);
 
     Response<List<WebsiteConfigEntity>> getWebsiteConfig();
+
+    Response<List<WebsiteConfigEntity>> updateWebsiteConfig(List<WebsiteConfigEntity> configs);
 }

@@ -244,4 +244,16 @@ public class AdminController {
     public Response<List<WebsiteConfigEntity>> getWebsiteConfig() {
         return adminService.getWebsiteConfig();
     }
+    /**
+     * 更新网站配置
+     * @Param configs
+     * @Return Response<List<WebsiteConfigEntity>>
+     * @Author 阿亮
+     * @Date 2025/10/1
+     *
+     * */
+    @PutMapping("/website-config")
+    public Response<List<WebsiteConfigEntity>> updateWebsiteConfig(@RequestBody List<WebsiteConfigEntity> configs) {
+        return adminService.updateWebsiteConfig(configs);
+    }
 }
